@@ -26,12 +26,6 @@ import dotenv from 'dotenv';
  */
 import helmet from 'helmet';
 
-/**
- * @module loadDevDependencies
- * Loads developer dependencies conditionally based on the current environment.
- */
-import loadDeveloperDependencies from './developer-dependencies.js';
-
 
 /* —————————————————————————————————————————————————————————————————————————— *\
 |  INITIALIZE MODULES                                                          |
@@ -45,7 +39,7 @@ dotenv.config();
 /**
  * @function loadRuntimeDependencies
  * 
- * Loads developer dependencies conditionally based on the current environment.
+ * Loads runtime dependencies to enable proper application functionality.
  * 
  * @return {import('express').Application} app
  * The pre-configured application to start up.
@@ -70,10 +64,6 @@ export default function loadRuntimeDependencies() {
      *     `X-Forwarded-For` list of addresses.
      */
     app.set('trust proxy', 1);
-
-
-    /* —— ⦾ —— ⦾ —— ⦾ —— { Developer dependencies } —— ⦾ —— ⦾ —— ⦾ —— */
-    loadDeveloperDependencies(app);
 
 
     /* —— ⦾ —— ⦾ —— ⦾ —— { Runtime dependencies } —— ⦾ —— ⦾ —— ⦾ —— */
