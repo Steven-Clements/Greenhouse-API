@@ -43,12 +43,13 @@ const nodeEnv = process.env.NODE_ENV || 'development';
  */
 
 const isDevelopment = process.env.NODE_ENV === 'development';
+
 /**
  * @var {number} port
  * Specifies the port which the application should listen on for requests.
  */
-
 const port = Number(process.env.PORT) || 5000;
+
 /**
  * @var {string} basePath
  * Specifies the base path for incoming API requests.
