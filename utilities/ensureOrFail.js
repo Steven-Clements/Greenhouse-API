@@ -1,38 +1,49 @@
 /** -------->>Copyright © 2025 Clementine Technology Solutions LLC.<<-------- *\
-|* `os-signal-listeners.js`   |   {√}                                         *|
+|* `ensureOrFail.js`   |   {√}                                                *|
 |* —————————————————————————————————————————————————————————————————————————— *| 
-|* Listens for terminations signals and events caused by unexpected errors    *|
-|* and forwards the processing to the graceful shutdown function.             *|
+|* Determines whether the specified parameter is a valid and present value    *|
+|* or throws an error if the value is missing or invalid.                     *|
 \* ------------------------->>All rights reserved.<<------------------------- */
 
 /* —————————————————————————————————————————————————————————————————————————— *\
 |  IMPORT DEPENDENCIES                                                         |
 \* —————————————————————————————————————————————————————————————————————————— */
-/**
- * @module attemptGracefulShutdown
- * Centralized logging utility with config-driven levels and formats.
- */
-import attemptGracefulShutdown from './graceful-shutdown.js';
+import ConfigError from "../errors/ConfigError.js"
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
-|  OS SIGNAL LISTENERS                                                         |
+|  ENSURE OR FAIL                                                              |
 \* —————————————————————————————————————————————————————————————————————————— */
 /**
- * @function registerOsSignalListeners
+ * @function ensureOrFail
  * 
- * Listen for signals sent by the OS and trigger a graceful shutdown with the
- * relevant error, if known.
+ * Checks if the specified property exists and contains a valid value.
  * 
- * @param {import('http').Server} serverInstance
+ * @param {any} parameterValue
+ * The current value of the named property.
+ * 
+ * @param {string} parameterName
+ * The name of the property that required validation.
+ * 
+ * @returns {boolean}
+ * True if the property is present and valid.
+ * 
+ * @throws {ConfigError}
+ * If the property is missing or invalid.
  */
-export default function registerOsSignalListeners(serverInstance) {
-    process.on('unhandledRejection', (reason) => {
-    attemptGracefulShutdown('unhandledRejection', serverInstance, reason);
-    });
-    process.on('uncaughtException', (error) => {
-        attemptGracefulShutdown('uncaughtException', serverInstance, error);
-    });
-    process.on('SIGINT', () => attemptGracefulShutdown('SIGINT', serverInstance));
-    process.on('SIGTERM', () => attemptGracefulShutdown('SIGTERM', serverInstance));
+export default function ensureOrFail(parameterValue, parameterName) {
+    if (
+        parameterValue === null ||
+        parameterValue === undefined ||
+        parameterValue === '' ||
+        parameterValue === 0
+    ) {
+        throw new ConfigError(
+            `The required configuration property '${parameterName}' is missing or invalid.`,
+            500,
+            `${parameterName} not present in 'process.env'`
+        );
+    }
+
+    return true;
 }

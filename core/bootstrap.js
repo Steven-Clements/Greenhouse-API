@@ -26,6 +26,13 @@ import dotenv from 'dotenv';
  */
 import helmet from 'helmet';
 
+/**
+ * @module validateConfig
+ * Validates configuration from `process.env` to determine if required
+ * properties are present.
+ */
+import validateConfig from './validate-config.js';
+
 
 /* —————————————————————————————————————————————————————————————————————————— *\
 |  INITIALIZE MODULES                                                          |
@@ -37,14 +44,20 @@ dotenv.config();
 |  LOAD RUNTIME DEPENDENCIES                                                   |
 \* —————————————————————————————————————————————————————————————————————————— */
 /**
- * @function loadRuntimeDependencies
+ * @function boot
  * 
  * Loads runtime dependencies to enable proper application functionality.
  * 
  * @return {import('express').Application} app
  * The pre-configured application to start up.
  */
-export default function loadRuntimeDependencies() {
+export default function boot() {
+    /* —————————————————————————————————————————————————————————————————————————— *\
+    |  VALIDATE CONFIGURATION                                                      |
+    \* —————————————————————————————————————————————————————————————————————————— */
+    validateConfig();
+
+
     /* —————————————————————————————————————————————————————————————————————————— *\
     |  BOOTSTRAP APPLICATION                                                       |
     \* —————————————————————————————————————————————————————————————————————————— */
