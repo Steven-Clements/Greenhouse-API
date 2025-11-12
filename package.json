@@ -19,11 +19,11 @@
     "server": "nodemon index.js"
   },
   "devDependencies": {
-      "chalk": "^5.6.2",
       "morgan": "^1.10.1",
       "nodemon": "^3.1.11"
   },
   "dependencies": {
+      "chalk": "^5.6.2",
       "dotenv": "^17.2.3",
       "express": "^5.1.0",
       "helmet": "^8.1.0"
