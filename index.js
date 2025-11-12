@@ -13,7 +13,7 @@
  * Loads runtime dependencies required for the application to function as
  * expected.
  */
-import loadRuntimeDependencies from './core/runtime-dependencies.js';
+import boot from './core/bootstrap.js';
 
 /**
  * @module logMessage
@@ -63,7 +63,7 @@ const basePath = process.env.RENDER_EXTERNAL_URL || process.env.BASE_PATH || 'ht
 (async () => {
     try {
         /* —— ⦾ —— ⦾ —— ⦾ —— { Bootstrap dependencies } —— ⦾ —— ⦾ —— ⦾ —— */
-        const app = loadRuntimeDependencies();
+        const app = boot();
 
         /* —————————————————————————————————————————————————————————————————————————— *\
         |  LISTEN FOR REQUESTS                                                         |
@@ -89,7 +89,7 @@ const basePath = process.env.RENDER_EXTERNAL_URL || process.env.BASE_PATH || 'ht
         /* —————————————————————————————————————————————————————————————————————————— *\
         |  OS SIGNAL LISTENERS                                                         |
         \* —————————————————————————————————————————————————————————————————————————— */
-        registerOsSignalListeners();
+        registerOsSignalListeners(serverInstance);
 
 
         /* —————————————————————————————————————————————————————————————————————————— *\
