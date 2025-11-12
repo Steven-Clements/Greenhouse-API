@@ -1,0 +1,27 @@
+<main class="wave-template">
+    <div class="column-section">
+        <div class="text">
+            <h1>Email Verification</h1>
+            <p>You registered successfully!</p>
+            <p>You need to verify your email address before you can log in.</p>
+            <p>We like to make sure our users are real people.</p>
+        </div>
+
+        <form
+            id="new-verification-form"
+            class="bf-basic-form responsive-form"
+            action="/email/verify"
+            method="POST"
+        >
+            <h2 style="padding-bottom:2rem;">Need another verification link?</h2>
+            <p style="padding-bottom:1.5rem;">Enter your email address to request a new one.</p>
+
+            <div class="wf-field-group responsive-field">
+                <input id="email" name="email" type="email" value="{{ $email }}" required />
+                <label for="email">Email Address</label>
+            </div>
+
+            <button type="submit" class="button button-primary">Request a New Code</button>
+        </form>
+    </div>
+</main>
