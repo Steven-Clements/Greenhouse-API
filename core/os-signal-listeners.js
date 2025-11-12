@@ -35,4 +35,9 @@ export default function registerOsSignalListeners(serverInstance) {
     });
     process.on('SIGINT', () => attemptGracefulShutdown('SIGINT', serverInstance));
     process.on('SIGTERM', () => attemptGracefulShutdown('SIGTERM', serverInstance));
+    process.once('SIGUSR2', () => {
+        attemptGracefulShutdown('SIGUSR2', serverInstance).then(() => {
+            process.kill(process.pid, 'SIGUSR2');
+        });
+    });
 }

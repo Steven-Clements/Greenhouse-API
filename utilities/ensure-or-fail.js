@@ -8,6 +8,10 @@
 /* —————————————————————————————————————————————————————————————————————————— *\
 |  IMPORT DEPENDENCIES                                                         |
 \* —————————————————————————————————————————————————————————————————————————— */
+/**
+ * @module ConfigError
+ * Throws errors when configuration values are missing or invalid.
+ */
 import ConfigError from "../errors/Config-Error.js"
 
 

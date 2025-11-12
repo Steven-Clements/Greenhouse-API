@@ -135,16 +135,6 @@ export default function registerDatabaseEventListeners(connection, options) {
     });
 
     /**
-     * Handle Nodemon restart signal explicitly
-     */
-    process.once('SIGUSR2', () => {
-        attemptGracefulShutdown('SIGUSR2', serverInstance).then(() => {
-            process.kill(process.pid, 'SIGUSR2');
-        });
-    });
-
-
-    /**
      * Listens for the `error` connection event.
      */
     connection.on("error", error => {
