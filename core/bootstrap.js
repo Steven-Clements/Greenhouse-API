@@ -1,5 +1,5 @@
 /** -------->>Copyright © 2025 Clementine Technology Solutions LLC.<<-------- *\
-|* `runtime-dependencies.js`   |   {√}                                        *|
+|* `bootstrap.js`   |   {√}                                                   *|
 |* —————————————————————————————————————————————————————————————————————————— *| 
 |* Loads runtime dependencies required for the application to function as     *|
 |* expected.                                                                  *|
