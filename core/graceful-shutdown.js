@@ -23,7 +23,7 @@ import { markManualDisconnect } from './database-event-listeners.js';
  * @module logMessage
  * Centralized logging utility with config-driven levels and formats.
  */
-import logMessage from './filesystem/logger.js';
+import logMessage from '../filesystem/logger.js';
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
