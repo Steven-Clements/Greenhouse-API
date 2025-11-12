@@ -24,13 +24,13 @@ import registerDatabaseEventListeners from './database-event-listeners.js';
  * @module DatabaseError
  * Throws errors when the database encounters connectivity issues.
  */
-import DatabaseError from '../errors/Database-Error';
+import DatabaseError from '../errors/Database-Error.js';
 
 /**
  * @module logMessage
  * Logs messages at the resolved level and format.
  */
-import logMessage from '../filesystem/logger';
+import logMessage from '../filesystem/logger.js';
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\

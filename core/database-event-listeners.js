@@ -19,13 +19,13 @@ import mongoose from 'mongoose';
  * Attempts to connect to the application's MongoDB database with automated
  * retries and exponential backoff.
  */
-import connect from './connect-mongo-db';
+import connect from './connect-mongo-db.js';
 
 /**
  * @module logMessage
  * Logs messages at the resolved level and format.
  */
-import logMessage from '../filesystem/logger';
+import logMessage from '../filesystem/logger.js';
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
@@ -133,6 +133,16 @@ export default function registerDatabaseEventListeners(connection, options) {
 
         isManualDisconnect = false;
     });
+
+    /**
+     * Handle Nodemon restart signal explicitly
+     */
+    process.once('SIGUSR2', () => {
+        attemptGracefulShutdown('SIGUSR2', serverInstance).then(() => {
+            process.kill(process.pid, 'SIGUSR2');
+        });
+    });
+
 
     /**
      * Listens for the `error` connection event.
