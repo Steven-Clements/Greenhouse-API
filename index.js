@@ -16,6 +16,12 @@
 import boot from './core/bootstrap.js';
 
 /**
+ * @module dispatchRequest
+ * Centralized logging utility with config-driven levels and formats.
+ */
+import dispatchRequest from './routes/dispatchRequest.js';
+
+/**
  * @module logMessage
  * Centralized logging utility with config-driven levels and formats.
  */
@@ -100,12 +106,7 @@ const basePath = process.env.RENDER_EXTERNAL_URL || process.env.BASE_PATH || 'ht
          * Dispatches requests to the appropriate router (`v1` or `static`) based on
          * the incoming URI and request data.
          */
-        app.get(`/`, (req, res) => {
-            res.status(200).json({
-                success: true,
-                message: 'Call dispatchRequest() here.'
-            });
-        });
+        app.get(`/`, dispatchRequest);
     } catch (error) {
         /* —————————————————————————————————————————————————————————————————————————— *\
         |  BOOT ERRORS                                                                 |

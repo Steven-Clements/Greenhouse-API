@@ -27,6 +27,17 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 
 /**
+ * @package express-handlebars
+ * @see https://www.npmjs.com/package/express-handlebars
+ */
+import { engine } from 'express-handlebars'
+
+/**
+ * @package path
+ */
+import path from 'path';
+
+/**
  * @module validateConfig
  * Validates configuration from `process.env` to determine if required
  * properties are present.
@@ -98,6 +109,22 @@ export default function boot() {
      * Helps secure Express applications by setting secure HTTP response headers.
      */
     app.use(helmet());
+
+    /**
+     * Handlebars templating engine for express authentication.
+     */
+    app.engine('hbs', engine({
+        extname: '.hbs',
+        defaultLayout: 'main',
+        layoutsDir: path.join(process.cwd(), 'views', 'layouts')
+    }));
+    app.set('view engine', 'hbs');
+    app.set('views', path.join(process.cwd(), 'views'));
+
+    /**
+     * Define a path for static assets.
+     */
+    app.use('/assets', express.static(path.join(process.cwd(), 'public')));
 
     return app;
 }

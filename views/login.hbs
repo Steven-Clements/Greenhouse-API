@@ -1,0 +1,41 @@
+<main class="wave-template">
+    <div class="login-background"></div>
+
+    <form
+        id="login-form"
+        class="wf-wave-form responsive-form"
+        action="/sessions/create"
+        method="POST"
+    >
+        <h1 class="wf-title">Sign In</h1>
+
+        <div class="wf-field-group">
+            <input id="email" name="email" type="email" minlength="8" required />
+            <label for="email">Email Address</label>
+        </div>
+
+        <div class="wf-field-group">
+            <input id="password" name="password" type="password" minlength="8" required />
+            <label for="password">Password</label>
+        </div>
+
+        <div class="wf-select-group">
+            <input id="remember" name="remember" type="checkbox" />
+            <label>Trust this device?</label>
+        </div>
+
+        <div class="wf-button-group">
+            <button type="submit" class="button button-primary">
+                Login <i class="fas fa-lock"></i>
+            </button>
+
+            <a href="/recovery/create" class="button button-alternate">
+                Forgot Password?
+            </a>
+        </div>
+
+        <p class="wf-text">
+            Don't have an account? <a class="wf-link" href="/register">Sign Up</a>
+        </p>
+    </form>
+</main>

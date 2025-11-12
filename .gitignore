@@ -4,3 +4,5 @@ package-lock.json
 
 core/developer-dependencies.js
 filesystem/logs
+
+uploads/
