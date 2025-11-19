@@ -18,7 +18,7 @@ import log from '../utilities/logger.js'
 /* —————————————————————————————————————————————————————————————————————————— *\
 | Helper variables                                                             |
 \* —————————————————————————————————————————————————————————————————————————— */
-const shutdownTimeoutMs = parseInt(process.env.SHUTDOWN_TIMEOUT_MS) || 5000;
+const shutdownTimeoutMs = Number.parseInt(process.env.SHUTDOWN_TIMEOUT_MS, 10) || 5000;
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
@@ -37,7 +37,7 @@ const shutdownTimeoutMs = parseInt(process.env.SHUTDOWN_TIMEOUT_MS) || 5000;
  * @param {import('http').Server} server
  * The HTTP server running on the current node.js process.
  */
-export default async function attemptGracefulShutdown(signal, server) {
+export default async function attemptGracefulShutdown(signal, server, dbConnection) {
     log('warn', `Detected ${signal} signal. Attempting graceful shutdown...`);
 
     try {
@@ -46,19 +46,30 @@ export default async function attemptGracefulShutdown(signal, server) {
             process.exit(1);
         }, shutdownTimeoutMs);
 
-        server.close(() => {               
-            log('info', 'Closing HTTP server process...');
+        await dbConnection.close();
+        log('info', 'Closed MongoDB connection successfully.');
 
-            clearTimeout(shutdownTimeout);
+        server.close((error) => {               
+            if (error) {
+                log('error', 'Error closing HTTP server.', { cause: error });
+                /* —————————————————————————————————————————————————————————————————————————— *\
+                | Exit code 2 | Shutdown error                                                 |
+                \* —————————————————————————————————————————————————————————————————————————— */
+                process.exit(2);
+            } else {
+                log('info', 'Closed HTTP server process.');
+                clearTimeout(shutdownTimeout);
 
-            /* —————————————————————————————————————————————————————————————————————————— *\
-            | Exit code 0 | Clean exit                                                     |
-            \* —————————————————————————————————————————————————————————————————————————— */
-            process.exit(0);
+                log('info', `Graceful shutdown completed after ${signal} signal.`);
+                /* —————————————————————————————————————————————————————————————————————————— *\
+                | Exit code 0 | Clean exit                                                     |
+                \* —————————————————————————————————————————————————————————————————————————— */
+                process.exit(0);
+            }
         });
 
     } catch (shutdownError) {
-        log ('error', `Failed to complete cleanup`, {
+        log('error', `Failed to complete cleanup`, {
             name: shutdownError.name, message: shutdownError.message, stack: shutdownError.stack
         });
 

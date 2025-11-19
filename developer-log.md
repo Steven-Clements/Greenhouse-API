@@ -2,6 +2,63 @@
 
 This log describes changes across the Greenhouse API project during the development phase of the project.
 
+## [0.0.3] - 19 September 2025
+
+This commit introduces robust MongoDB connection management (`connect-mongo-db.js`) with automated retries and exponential backoff, along with event listeners (`mongo-db-listeners.js`) for improved observability.
+
+Error handling and shutdown logic have been updated to integrate the new database connection lifecycle, ensuring graceful termination and consistent logging across the system.
+
+- **Commit message**: `Add MongoDB connection | MongoDB Listeners | Update error handler`
+
+### Added
+
+- Created a new `mongo-db-listeners.js` to listen for database connection events and log them.
+- Created a new `connect-mongo-db.js` to establish a persistent connection to MongoDB with automated retries and exponential backoff.
+
+### Changed
+
+- Updated `error-handler.js` to pass context to the updated logger correctly.
+- Updated `index.js` to call the new connection function.
+- Updated `signal-listeners.js` to pass the database connection to graceful shutdown.
+- Updated `graceful-shutdown.js` to close the database connection in addition to its other tasks.
+
+### Directory structure
+
+```txt
+[greenhouse-api]
+    |-- [errors]
+    |       |-- Api-Error.js
+    |       |-- Auth-Error.js
+    |       |-- Bad-Request-Error.js
+    |       |-- Config-Error.js
+    |       |-- Database-Error.js
+    |       |-- Invalid-Parameter-Error.js
+    |       |-- Not-Found-Error.js
+    |-- [logs]
+    |-- [node_modules]
+    |-- [middleware]
+    |       |-- error-handler.js
+    |-- [routes]
+    |       |-- dispatch-request.js
+    |       |-- static-routes.js
+    |       |-- v1-routes.js
+    |-- [system]
+    |       |-- connect-mongo-db.js
+    |       |-- graceful-shutdown.js
+    |       |-- mongo-db-listeners.js
+    |       |-- signal-listeners.js
+    |-- [utilities]
+    |       |-- logger.js
+    |-- .env
+    |-- .gitignore
+    |-- .markdownlint.json
+    |-- developer-log.md
+    |-- index.js
+    |-- package-lock.json
+    |-- package.json
+    |-- README.md
+```
+
 ## [0.0.2] - 18 September 2025
 
 This commit was dedicated to the partial modularization of the entry point. New files were created to modularize OS termination signal listeners (`signal-listeners.js`) and attempt graceful shutdowns. (`graceful-shutdown.js`).

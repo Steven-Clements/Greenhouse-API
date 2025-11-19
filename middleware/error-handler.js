@@ -320,7 +320,7 @@ function errorHandler(error, req, res, next) {
 
     /* —— ⦿ —— ⦿ —— ⦿ —— { Log error details (development) } —— ⦿ —— ⦿ —— ⦿ —— */
     if (process.env.NODE_ENV === 'development') {
-        log('error', error.message, { context: errorContext })
+        log('error', error.message, errorContext);
     }
 
     /* —— ⦿ —— ⦿ —— ⦿ —— { Error context } —— ⦿ —— ⦿ —— ⦿ —— */

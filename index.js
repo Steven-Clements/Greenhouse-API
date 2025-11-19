@@ -25,6 +25,7 @@ dotenv.config();
 /* —————————————————————————————————————————————————————————————————————————— *\
 | Application modules                                                          |
 \* —————————————————————————————————————————————————————————————————————————— */
+import connectMongoDb from './system/connect-mongo-db.js';
 import dispatchRequest from './routes/dispatch-request.js';
 import log from './utilities/logger.js';
 import registerSignalListeners from './system/signal-listeners.js';
@@ -43,6 +44,12 @@ const basePath = process.env.RENDER_EXTERNAL_URL || process.env.BASE_PATH || 'ht
 \* —————————————————————————————————————————————————————————————————————————— */
 (async () => {
     try {
+        /* —————————————————————————————————————————————————————————————————————————— *\
+        | Connect to MongoDB database                                                  |
+        \* —————————————————————————————————————————————————————————————————————————— */
+        const dbInfo = await connectMongoDb();
+
+
         /* —————————————————————————————————————————————————————————————————————————— *\
         | Initialize Greenhouse application                                            |
         \* —————————————————————————————————————————————————————————————————————————— */
@@ -76,11 +83,9 @@ const basePath = process.env.RENDER_EXTERNAL_URL || process.env.BASE_PATH || 'ht
         /* —————————————————————————————————————————————————————————————————————————— *\
         | Register OS signal listeners                                                 |
         \* —————————————————————————————————————————————————————————————————————————— */
-        await registerSignalListeners(server);
+        await registerSignalListeners(server, dbInfo.connection);
     } catch (bootError) {
-        log ('error', `BOOT ERROR >> The server failed to start correctly.`, {
-            name: bootError.name, message: bootError.message, stack: bootError.stack
-        });
+        log ('error', `BOOT ERROR >> The server failed to start correctly.`, { cause: error });
 
         /* —————————————————————————————————————————————————————————————————————————— *\
         | Exit code 1 | Boot error                                                     |

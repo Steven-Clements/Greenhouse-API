@@ -1,8 +1,8 @@
 /** ——————>> Copyright © 2025 Clementine Technology Solutions LLC.  <<——————— *\
-|* signal-listeners.js | {√}/system                                           *|
+|* mongo-db-listeners.js | {√}/system                                         *|
 |* —————————————————————————————————————————————————————————————————————————— *|
-|* Listens for OS termination signals and triggers a graceful shutdown when   *|
-|* a signal is detected.                                                      *|
+|* Listens for database connection events and triggers automated reconnection *|
+|* attempts when the database experiences an unexpected disconnection.        *|
 |* —————————————————————————————————————————————————————————————————————————— *|
 |* @version 1.0.0   |  @since: 1.0.0                                          *|
 |* @author: Steven "Chris" Clements <clements.steven07@outlook.com>           *|
@@ -11,42 +11,32 @@
 /* —————————————————————————————————————————————————————————————————————————— *\
 | Application modules                                                          |
 \* —————————————————————————————————————————————————————————————————————————— */
-import attemptGracefulShutdown from './graceful-shutdown.js';
+import log from "../utilities/logger.js";
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
-| Register signal listeners                                                    |
+|  MongoDB Listeners                                                           |
 \* —————————————————————————————————————————————————————————————————————————— */
 /**
- * @module registerSignalListeners
- * 
- * Detects OS termination signals and triggers a graceful shutdown when a
- * signal is detected.
- * 
- * @param {import('http').Server} server
- * The HTTP server instance to close. 
+ * @function registerMongoDbListeners
+ *
+ * Listens for connections events and responds to unexpected disconnections
+ * by attempting to reconnect to the database.
+ *
+ * @param {mongoose.Connection} connection
+ * The connection triggering the disconnection event.
  */
-export default async function registerSignalListeners(server, dbConnection) {
-    process.on('uncaughtException', async (error) => {
-        log ('error', `UNCAUGHT EXCEPTION`, {
-            name: error.name, message: error.message, stack: error.stack
-        });
+export default function registerMongoDbListeners(connection) {
 
-        await attemptGracefulShutdown('uncaughtException', server, dbConnection);
+    connection.on('disconnected', async () => {
+        log('warn', 'MongoDB database disconnected unexpectedly. Attempting to reconnect...');
     });
-    process.on('unhandledRejection', async (reason) => {
-        if (reason instanceof Error) {
-            log ('error', `UNHANDLED REJECTION`, {
-                name: reason.name, message: reason.message, stack: reason.stack
-            });
-        } else {
-            log ('error', `UNHANDLED REJECTION`, {
-                message: reason
-            });
-        }
 
-        await attemptGracefulShutdown('unhandledRejection', server, dbConnection)
+    connection.on('reconnected', () => {
+        log('info', 'Reestablished MongoDB database connection successfully.');
     });
-    process.on('SIGINT', async () => await attemptGracefulShutdown('signalInterrupt', server, dbConnection));
-    process.on('SIGTERM', async () => await attemptGracefulShutdown('signalTerminate', server, dbConnection));
+
+    connection.on('error', (error) => {
+        log('error', 'Failed to reestablish a connection to the MongoDB database...', { cause: error });
+    });
 }
