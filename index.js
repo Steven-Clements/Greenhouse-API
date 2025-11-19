@@ -27,6 +27,7 @@ dotenv.config();
 \* —————————————————————————————————————————————————————————————————————————— */
 import dispatchRequest from './routes/dispatch-request.js';
 import log from './utilities/logger.js';
+import registerSignalListeners from './system/signal-listeners.js';
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
@@ -35,7 +36,6 @@ import log from './utilities/logger.js';
 const port = parseInt(process.env.PORT) || 5000;
 const environment = process.env.NODE_ENV || 'development';
 const basePath = process.env.RENDER_EXTERNAL_URL || process.env.BASE_PATH || 'http://localhost:5000';
-const shutdownTimeoutMs = parseInt(process.env.SHUTDOWN_TIMEOUT_MS) || 5000;
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
@@ -76,28 +76,7 @@ const shutdownTimeoutMs = parseInt(process.env.SHUTDOWN_TIMEOUT_MS) || 5000;
         /* —————————————————————————————————————————————————————————————————————————— *\
         | Register OS signal listeners                                                 |
         \* —————————————————————————————————————————————————————————————————————————— */
-        process.on('uncaughtException', (error) => {
-            log ('error', `UNCAUGHT EXCEPTION`, {
-                name: error.name, message: error.message, stack: error.stack
-            });
-
-            attemptGracefulShutdown('uncaughtException', server);
-        });
-        process.on('unhandledRejection', (reason) => {
-            if (reason instanceof Error) {
-                log ('error', `UNHANDLED REJECTION`, {
-                    name: reason.name, message: reason.message, stack: reason.stack
-                });
-            } else {
-                log ('error', `UNHANDLED REJECTION`, {
-                    message: reason
-                });
-            }
-
-            attemptGracefulShutdown('unhandledRejection', server)
-        });
-        process.on('SIGINT', () => attemptGracefulShutdown('signalInterrupt', server));
-        process.on('SIGTERM', () => attemptGracefulShutdown('signalTerminate', server));
+        await registerSignalListeners(server);
     } catch (bootError) {
         log ('error', `BOOT ERROR >> The server failed to start correctly.`, {
             name: bootError.name, message: bootError.message, stack: bootError.stack
@@ -109,55 +88,3 @@ const shutdownTimeoutMs = parseInt(process.env.SHUTDOWN_TIMEOUT_MS) || 5000;
         process.exit(1);
     }
 })();
-        
-
-
-/* —————————————————————————————————————————————————————————————————————————— *\
-| Attempt graceful shutdown                                                    |
-\* —————————————————————————————————————————————————————————————————————————— */
-/**
- * @module attemptGracefulShutdown
- * 
- * Attempts to close connections with external resources, flush logs, and
- * enforces a server timeout when signals or errors cause the server to shut
- * down unexpectedly.
- * 
- * @param {string} signal
- * The OS signal triggering the graceful shutdown.
- * 
- * @param {import('http').Server} server
- * The HTTP server running on the current node.js process.
- */
-export default async function attemptGracefulShutdown(signal, server) {
-    log('warn', `Detected ${signal} signal. Attempting graceful shutdown...`);
-
-    try {
-        const shutdownTimeout = setTimeout(() => {
-            log('error', 'Shutdown timed out, forcing exit');
-            process.exit(1);
-        }, shutdownTimeoutMs);
-
-        server.close(() => {
-            clearTimeout(shutdownTimeout);
-            
-            log('info', 'Closing HTTP server process...');
-
-            /* —————————————————————————————————————————————————————————————————————————— *\
-            | Exit code 0 | Clean exit                                                     |
-            \* —————————————————————————————————————————————————————————————————————————— */
-            process.exit(0);
-        });
-
-    } catch (shutdownError) {
-        const timestamp = new Date().toTimeString();
-
-        log ('error', `Failed to complete cleanup`, {
-            name: shutdownError.name, message: shutdownError.message, stack: shutdownError.stack
-        });
-
-        /* —————————————————————————————————————————————————————————————————————————— *\
-        | Exit code 2 | Shutdown error                                                 |
-        \* —————————————————————————————————————————————————————————————————————————— */
-        process.exit(2);
-    }
-}

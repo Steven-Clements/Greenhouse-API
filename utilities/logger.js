@@ -33,10 +33,23 @@ const logFile = process.env.LOG_FILE || 'app-%DATE%.log'
 const {
     combine, timestamp, printf, colorize, errors
 } = winston.format;
-const logFormat = printf(({ level, message, timestamp, stack }) => {
+
+
+/* —————————————————————————————————————————————————————————————————————————— *\
+| Custom formatter                                                             |
+\* —————————————————————————————————————————————————————————————————————————— */
+/**
+ * Custom formatter that supports structured error contexts.
+ * In development, pretty-prints JSON context; in production, keeps it compact.
+ */
+const logFormat = printf(({ level, message, timestamp, stack, ...meta }) => {
     const output = stack ? stack : message;
-    return `${timestamp} ${level}: ${output}`;
+    const context = Object.keys(meta).length
+        ? JSON.stringify(meta, null, isDevelopment ? 2 : 0)
+        : '';
+    return `${timestamp} ${level}: ${output}${context ? ` | context: ${context}` : ''}`;
 });
+
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
@@ -53,7 +66,9 @@ if (!fs.existsSync(logDirectory)) {
 const logger = winston.createLogger({
     level: logLevel,
     format: combine(
-        colorize(), timestamp(), errors({ stack: isDevelopment ? true : false }),
+        colorize(),
+        timestamp(),
+        errors({ stack: isDevelopment }),
         logFormat
     ),
     transports: [
@@ -98,5 +113,14 @@ const logger = winston.createLogger({
  * Optional object with additional context.
  */
 export default function log(level, message, context = {}) {
-    logger.log(level, { message, ...context });
+    if (message instanceof Error) {
+        logger.log(level, {
+            message: message.message,
+            stack: message.stack,
+            ...context
+        });
+    } else {
+        logger.log(level, { message, ...context });
+    }
 }
+

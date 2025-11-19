@@ -2,6 +2,68 @@
 
 This log describes changes across the Greenhouse API project during the development phase of the project.
 
+## [0.0.2] - 18 September 2025
+
+This commit was dedicated to the partial modularization of the entry point. New files were created to modularize OS termination signal listeners (`signal-listeners.js`) and attempt graceful shutdowns. (`graceful-shutdown.js`).
+
+Introduced custom error classes for production-grade error handling, including `Api-Error.js`, `Auth-Error.js`, `Bad-Request-Error.js`, `Config-Error.js`, `Database-Error.js`, `Invalid-Parameter-Error.js`, and `Not-Found-Error.js`. Created custom error-handling middleware to generate error messages in the console, logs, and API response, based on the current environment.
+
+- **Commit message**: `Modularize entry point | Custom errors | Error handler`
+
+### Added
+
+- Created a new `Not-Found-Error.js` for custom errors involving non-existing routes.
+- Created a new `Invalid-Parameter-Error.js` for custom errors involving client requests with missing or invalid parameters.
+- Created a new `Database-Error.js` for custom database connectivity and query errors.
+- Created a new `Config-Error.js` for custom configuration property errors.
+- Created a new `Bad-Request-Error.js` for unexpected errors that occur during API requests from clients.
+- Created a new `Auth-Error.js` for custom authentication and authorization errors.
+- Created a new `Api-Error.js` as a base class for custom errors in the Greenhouse API.
+- Created a new `error-handler.js` to act as the error boundary and primary error handler for the application.
+- Created a new `.markdownlint.json` to enforce custom linting rules for markdown files.
+- Created a new `signal-listeners.js` to listen for OS termination signals and trigger graceful shutdowns.
+- Created a new `graceful-shutdown.js` to attempt to flush logs, close connections, and ensure a server timeout is set.
+
+### Changed
+
+- Updated `logger.js` to accommodate new error handling methods.
+- Updated `index.js` to remove existing signal listening and shutdown logic from the entry point into separate files.
+
+### Directory structure
+
+```txt
+[greenhouse-api]
+    |-- [errors]
+    |       |-- Api-Error.js
+    |       |-- Auth-Error.js
+    |       |-- Bad-Request-Error.js
+    |       |-- Config-Error.js
+    |       |-- Database-Error.js
+    |       |-- Invalid-Parameter-Error.js
+    |       |-- Not-Found-Error.js
+    |-- [logs]
+    |-- [node_modules]
+    |-- [middleware]
+    |       |-- error-handler.js
+    |-- [routes]
+    |       |-- dispatch-request.js
+    |       |-- static-routes.js
+    |       |-- v1-routes.js
+    |-- [system]
+    |       |-- graceful-shutdown.js
+    |       |-- signal-listeners.js
+    |-- [utilities]
+    |       |-- logger.js
+    |-- .env
+    |-- .gitignore
+    |-- .markdownlint.json
+    |-- developer-log.md
+    |-- index.js
+    |-- package-lock.json
+    |-- package.json
+    |-- README.md
+```
+
 ## [0.0.1] — 17 September 2025
 
 This commit was dedicated to setting up the project and writing boilerplate code (`index.js`) for the Express application. Added new version control (`.gitignore`), environment (`.env`), and documentation files (`developer-log.md` and `README.md`).
@@ -70,10 +132,8 @@ These developer dependencies were installed as part of initial setup, though not
     |       |-- dispatch-request.js
     |       |-- static-routes.js
     |       |-- v1-routes.js
-    |
     |-- [utilities]
     |       |-- logger.js
-    |
     |-- .env
     |-- .gitignore
     |-- developer-log.md
