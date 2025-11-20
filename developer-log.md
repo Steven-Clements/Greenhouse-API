@@ -2,6 +2,105 @@
 
 This log describes changes across the Greenhouse API project during the development phase of the project.
 
+---
+
+## [0.0.5] - 20 September 2025
+
+Introduced styling, views, and core service logic to support user registration and email verification.
+
+Added global styles (`style.css`), Handlebars templates for views (`register.hbs`, `main.hbs`) and emails (`email,hbs`, `verify-email.hbs`), and foundational service modules for authentication (`auth-service.js`), user management (`user-service.js`), and outbound email delivery (`deliver-email.js`, `render-template.js`).
+
+Updated routing and middleware to enable static view rendering and proper request handling.
+
+- **Commit message**: `Styling | Views | Auth & User Services | Email Delivery`
+
+### Added
+
+Added the following files as part of this commit:
+
+- Created a new `style.css` to define global themes and styles for application views.
+- Created a new `register.hbs` to define markup for the register user view.
+- Created a new `verify-email.hbs` to define markup for the verify email view.
+- Created a new `email.hbs` to define markup for the global layout for handlebars templates used for emails.
+- Created a new `main.hbs` to define markup for the global layout for handlebars templates used for views.
+- Created a new `deliver-email.js` to define and deliver outbound emails in Nodemailer transports.
+- Created a new `render-templates.js` to render handlebars views to define the HTML and CSS for outbound email messages.
+- Created a new `auth-service.js` to manage business logic for authentication and verification purposes.
+- Created a new `user-service.js` to manage business logic for the user resource.
+- Created a new `async-handler.js` to wrap requests in a promise to handle asynchronous operations without repetitive try-catch blocks.
+
+### Changed
+
+The following files were updated as part of this commit:
+
+- Updated `.gitignore` to exclude images and uploads folders contained in the `assets` directory.
+- Updated `upload-handler.js` to reference the `assets/uploads` directory.
+- Updated `static-routes.js` to include routing for the static `register` view.
+- Updated `index.js` (entry point) to add middleware for processing GET requests as static Handlebars views.
+- Updated `create-user-rules.js` to export it correctly for use in other modules.
+
+### Directory structure
+
+The current directory structure looks like this:
+
+```txt
+[greenhouse-api]
+    |-- [controllers]
+    |       |-- [users]
+    |               |-- create-user.js
+    |-- [errors]
+    |       |-- Api-Error.js
+    |       |-- Auth-Error.js
+    |       |-- Bad-Request-Error.js
+    |       |-- Config-Error.js
+    |       |-- Database-Error.js
+    |       |-- Invalid-Parameter-Error.js
+    |       |-- Not-Found-Error.js
+    |-- [logs]
+    |-- [node_modules]
+    |-- [middleware]
+    |       |-- [rules]
+    |               |--create-user-rules.js
+    |       |-- async-handler.js
+    |       |-- error-handler.js
+    |       |-- upload-handler.js
+    |       |-- validation-handler.js
+    |-- [routes]
+    |       |-- dispatch-request.js
+    |       |-- static-routes.js
+    |       |-- user-routes.js
+    |       |-- v1-routes.js
+    |-- [services]
+    |       |-- auth-service.js
+    |       |-- user-service.js
+    |-- [system]
+    |       |-- connect-mongo-db.js
+    |       |-- graceful-shutdown.js
+    |       |-- mongo-db-listeners.js
+    |       |-- signal-listeners.js
+    |-- [utilities]
+    |       |-- deliver-email.js
+    |       |-- logger.js
+    |       |-- render-templates.js
+    |-- [views]
+    |       |-- [email]
+    |               |-- verify-email.hbs
+    |       |-- [layouts]
+    |               |-- email.hbs
+    |               |-- main.hbs
+    |       |-- register.hbs
+    |-- .env
+    |-- .gitignore
+    |-- .markdownlint.json
+    |-- developer-log.md
+    |-- index.js
+    |-- package-lock.json
+    |-- package.json
+    |-- README.md
+```
+
+---
+
 ## [0.0.4] - 19 September 2025
 
 Introduced user registration flow with request validation and file upload support.
@@ -12,6 +111,8 @@ Added dedicated controller (`create-user.js`), middleware (`rules/create-user-ru
 
 ### Added
 
+Added the following files as part of this commit:
+
 - Created a new `create-user-rules.js` to define validation rules for the operation.
 - Created a new `validation-handler.js` to validate incoming requests before routing them to the specified endpoint.
 - Created a new `create-user.js` to handle user registration.
@@ -20,10 +121,14 @@ Added dedicated controller (`create-user.js`), middleware (`rules/create-user-ru
 
 ### Changed
 
+The following files were updated as part of this commit:
+
 - Globally updated all files to fix top-level, block-style comment boxes.
 - Updated `v1-routes.js` to handle requests to User routes.
 
 ### Directory structure
+
+The current directory structure looks like this:
 
 ```txt
 [greenhouse-api]
@@ -68,6 +173,8 @@ Added dedicated controller (`create-user.js`), middleware (`rules/create-user-ru
     |-- README.md
 ```
 
+---
+
 ## [0.0.3] - 19 September 2025
 
 This commit introduces robust MongoDB connection management (`connect-mongo-db.js`) with automated retries and exponential backoff, along with event listeners (`mongo-db-listeners.js`) for improved observability.
@@ -78,10 +185,14 @@ Error handling and shutdown logic have been updated to integrate the new databas
 
 ### Added
 
+Added the following files as part of this commit:
+
 - Created a new `mongo-db-listeners.js` to listen for database connection events and log them.
 - Created a new `connect-mongo-db.js` to establish a persistent connection to MongoDB with automated retries and exponential backoff.
 
 ### Changed
+
+The following files were updated as part of this commit:
 
 - Updated `error-handler.js` to pass context to the updated logger correctly.
 - Updated `index.js` to call the new connection function.
@@ -89,6 +200,8 @@ Error handling and shutdown logic have been updated to integrate the new databas
 - Updated `graceful-shutdown.js` to close the database connection in addition to its other tasks.
 
 ### Directory structure
+
+The current directory structure looks like this:
 
 ```txt
 [greenhouse-api]
@@ -135,6 +248,8 @@ Introduced custom error classes for production-grade error handling, including `
 
 ### Added
 
+Added the following files as part of this commit:
+
 - Created a new `Not-Found-Error.js` for custom errors involving non-existing routes.
 - Created a new `Invalid-Parameter-Error.js` for custom errors involving client requests with missing or invalid parameters.
 - Created a new `Database-Error.js` for custom database connectivity and query errors.
@@ -149,10 +264,14 @@ Introduced custom error classes for production-grade error handling, including `
 
 ### Changed
 
+The following files were updated as part of this commit:
+
 - Updated `logger.js` to accommodate new error handling methods.
 - Updated `index.js` to remove existing signal listening and shutdown logic from the entry point into separate files.
 
 ### Directory structure
+
+The current directory structure looks like this:
 
 ```txt
 [greenhouse-api]
@@ -246,6 +365,8 @@ These developer dependencies were installed as part of initial setup, though not
 - [supertest](https://www.npmjs.com/package/supertest)
 
 ### Directory structure
+
+The current directory structure looks like this:
 
 ```txt
 [greenhouse-api]

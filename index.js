@@ -14,6 +14,8 @@
 \* —————————————————————————————————————————————————————————————————————————— */
 import express from 'express';
 import dotenv from 'dotenv';
+import { engine } from 'express-handlebars';
+import path from 'path';
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
@@ -63,6 +65,19 @@ const basePath = process.env.RENDER_EXTERNAL_URL || process.env.BASE_PATH || 'ht
         app.use(express.urlencoded({
             extended: true
         }));
+
+
+        /* —————————————————————————————————————————————————————————————————————————— *\
+        | Generate static views                                                        |
+        \* —————————————————————————————————————————————————————————————————————————— */
+        app.engine('hbs', engine({
+            extname: '.hbs',
+            defaultLayout: 'main',
+            layoutsDir: path.join(process.cwd(), 'views', 'layouts')
+        }));
+        app.set('view engine', 'hbs');
+
+        app.set('views', path.join(process.cwd(), 'views'))
 
 
         /* —————————————————————————————————————————————————————————————————————————— *\

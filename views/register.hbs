@@ -1,0 +1,56 @@
+<main class="form-template">
+    <form
+        id="register-form"
+        class=""
+        method="POST"
+        action="/api/v1/users/create"
+        enctype="multipart/form-data"
+    >
+        <h1 class="">Sign Up</h1>
+        <p class="">
+        Enter your details below to register for a new account. The fields outlined in RED are <strong>required</strong>.
+        </p>
+
+        <div class="">
+            <label for="profilePicture">Profile Picture</label>
+            <input id="" name="profilePicture" type="file" />
+        </div>
+
+        <div class="">
+            <div class="">
+                <label for="name">Name</label>
+                <input id="name" name="name" minlength="6" maxlength="50" required />
+            </div>
+
+            <div class="">
+                <label for="username">Username</label>
+                <input id="username" name="username" minlength="2" maxlength="25" />
+            </div>
+        </div>
+
+        <div class="">
+            <label for="email">Email Address</label>
+            <input id="email" name="email" type="email" minlength="8" maxlength="254" required />
+        </div>
+
+        <div class="">
+            <div class="">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" minlength="8" maxlength="64" required />
+            </div>
+
+            <div class="">
+                <label for="confirmPassword">Confirm Password</label>
+                <input id="confirmPassword" name="confirmPassword" type="password" minlength="8" maxlength="64" required />
+            </div>
+        </div>
+
+        <button type="submit" class="">
+            Register <i class="fas fa-lock"></i>
+        </button>
+
+        <p class="">
+            Already have an account? <a class="" href="/login">Sign In</a>
+        </p>
+    </form>
+</main>

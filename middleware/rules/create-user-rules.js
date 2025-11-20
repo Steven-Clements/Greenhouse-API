@@ -53,3 +53,9 @@ const createUserRules = [
     .isLength({ min: 8, max: 64 })
     .withMessage(`The 'password' parameter must be between 8 and 64 characters.`)
 ];
+
+
+/* —————————————————————————————————————————————————————————————————————————— *\
+|  Export rules                                                                |
+\* —————————————————————————————————————————————————————————————————————————— */
+export default createUserRules;

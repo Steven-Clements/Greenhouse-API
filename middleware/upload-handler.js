@@ -20,7 +20,7 @@ import fs from 'fs';
 /* —————————————————————————————————————————————————————————————————————————— *\
 | Find or create directory                                                     |
 \* —————————————————————————————————————————————————————————————————————————— */
-const uploadDirectory = path.join(process.cwd(), "uploads");
+const uploadDirectory = path.join(process.cwd(), 'assets', 'uploads');
 
 if (!fs.existsSync(uploadDirectory)) {
     fs.mkdirSync(uploadDirectory, { recursive: true });
