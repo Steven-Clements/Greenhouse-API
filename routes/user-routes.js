@@ -15,14 +15,25 @@ import express from 'express';
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
+| Application modules                                                          |
+\* —————————————————————————————————————————————————————————————————————————— */
+import createUser from '../controllers/users/create-user.js';
+import validateRequest from '../middleware/validation-handler.js';
+import createUserRules from '../middleware/rules/create-user-rules.js';
+import upload from '../middleware/upload-handler.js';
+
+
+/* —————————————————————————————————————————————————————————————————————————— *\
 | Initialize router                                                            |
 \* —————————————————————————————————————————————————————————————————————————— */
 const router = express.Router();
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
-| Define static views                                                          |
+| Define API endpoints                                                         |
 \* —————————————————————————————————————————————————————————————————————————— */
+router.route('/')
+    .post(upload.single('profilePicture'), createUserRules, validateRequest, createUser);
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\

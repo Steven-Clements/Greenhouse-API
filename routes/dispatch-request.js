@@ -5,7 +5,7 @@
 |* API routes based on the specified URI.                                     *|
 |* —————————————————————————————————————————————————————————————————————————— *|
 |* @version 1.0.0   |  @since: 1.0.0                                          *|
-|* @author: Steven "Chris" Clements <clements.steven07@outlook.com>           *|
+|* @author Steven "Chris" Clements <clements.steven07@outlook.com>            *|
 \* ————————————————————————>> All Rights Reserved. <<———————————————————————— */
 
 /* —————————————————————————————————————————————————————————————————————————— *\

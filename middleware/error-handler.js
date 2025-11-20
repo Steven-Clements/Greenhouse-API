@@ -5,7 +5,7 @@
 |* with the server, third-party packages, and during requests.                *|
 |* —————————————————————————————————————————————————————————————————————————— *|
 |* @version 1.0.0   |  @since: 1.0.0                                          *|
-|* @author: Steven "Chris" Clements <clements.steven07@outlook.com>           *|
+|* @author Steven "Chris" Clements <clements.steven07@outlook.com>            *|
 \* ————————————————————————>> All Rights Reserved. <<———————————————————————— */
 
 /* —————————————————————————————————————————————————————————————————————————— *\

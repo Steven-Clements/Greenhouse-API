@@ -4,7 +4,7 @@
 |* Custom error thrown when a client requests a route that does not exist.    *|
 |* —————————————————————————————————————————————————————————————————————————— *|
 |* @version 1.0.0   |  @since: 1.0.0                                          *|
-|* @author: Steven "Chris" Clements <clements.steven07@outlook.com>           *|
+|* @author Steven "Chris" Clements <clements.steven07@outlook.com>            *|
 \* ————————————————————————>> All Rights Reserved. <<———————————————————————— */
 
 /* —————————————————————————————————————————————————————————————————————————— *\

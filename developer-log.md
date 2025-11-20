@@ -2,6 +2,72 @@
 
 This log describes changes across the Greenhouse API project during the development phase of the project.
 
+## [0.0.4] - 19 September 2025
+
+Introduced user registration flow with request validation and file upload support.
+
+Added dedicated controller (`create-user.js`), middleware (`rules/create-user-rules.js`), and routes (`user-routes.js`) for the User resource, including validation (`validation-handler.js`) and upload handling (`upload-handler.js`). Updated routing and documentation for consistency.
+
+- **Commit message**: `File uploads | Request validation | Initial controller`
+
+### Added
+
+- Created a new `create-user-rules.js` to define validation rules for the operation.
+- Created a new `validation-handler.js` to validate incoming requests before routing them to the specified endpoint.
+- Created a new `create-user.js` to handle user registration.
+- Created a new `user-routes.js` to handle route applicable requests to the User resource. Added `createUser` endpoint and enabled file uploads. Added request validation against custom rules.
+- Created a new `upload-handler.js` to handle file uploads to the server.
+
+### Changed
+
+- Globally updated all files to fix top-level, block-style comment boxes.
+- Updated `v1-routes.js` to handle requests to User routes.
+
+### Directory structure
+
+```txt
+[greenhouse-api]
+    |-- [controllers]
+    |       |-- [users]
+    |               |-- create-user.js
+    |-- [errors]
+    |       |-- Api-Error.js
+    |       |-- Auth-Error.js
+    |       |-- Bad-Request-Error.js
+    |       |-- Config-Error.js
+    |       |-- Database-Error.js
+    |       |-- Invalid-Parameter-Error.js
+    |       |-- Not-Found-Error.js
+    |-- [logs]
+    |-- [node_modules]
+    |-- [middleware]
+    |       |-- [rules]
+    |               |--create-user-rules.js
+    |       |-- error-handler.js
+    |       |-- upload-handler.js
+    |       |-- validation-handler.js
+    |-- [routes]
+    |       |-- dispatch-request.js
+    |       |-- static-routes.js
+    |       |-- user-routes.js
+    |       |-- v1-routes.js
+    |-- [system]
+    |       |-- connect-mongo-db.js
+    |       |-- graceful-shutdown.js
+    |       |-- mongo-db-listeners.js
+    |       |-- signal-listeners.js
+    |-- [utilities]
+    |       |-- logger.js
+    |-- .env
+    |-- .gitignore
+    |-- .markdownlint.json
+    |-- developer-log.md
+    |-- index.js
+    |-- package-lock.json
+    |-- package.json
+    |-- README.md
+```
+
 ## [0.0.3] - 19 September 2025
 
 This commit introduces robust MongoDB connection management (`connect-mongo-db.js`) with automated retries and exponential backoff, along with event listeners (`mongo-db-listeners.js`) for improved observability.

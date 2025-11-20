@@ -1,31 +1,49 @@
 /** ——————>> Copyright © 2025 Clementine Technology Solutions LLC.  <<——————— *\
-|* static-routes.js | {√}/routes                                              *|
+|* upload-handler.js | {√}/middleware                                         *|
 |* —————————————————————————————————————————————————————————————————————————— *|
-|* Primary router for API requests. Dispatches requests for both static and   *|
-|* API routes based on the specified URI.                                     *|
+|* Ensures uploaded files are of the requested file and mime type before      *|
+|* processing uploads to the server.                                          *|
 |* —————————————————————————————————————————————————————————————————————————— *|
 |* @version 1.0.0   |  @since: 1.0.0                                          *|
 |* @author Steven "Chris" Clements <clements.steven07@outlook.com>            *|
 \* ————————————————————————>> All Rights Reserved. <<———————————————————————— */
 
 /* —————————————————————————————————————————————————————————————————————————— *\
-| Runtime dependencies                                                         |
+| Import dependencies                                                          |
 \* —————————————————————————————————————————————————————————————————————————— */
-import express from 'express';
+import { v4 as uuidv4 } from 'uuid';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
-| Initialize router                                                            |
+| Find or create directory                                                     |
 \* —————————————————————————————————————————————————————————————————————————— */
-const router = express.Router();
+const uploadDirectory = path.join(process.cwd(), "uploads");
+
+if (!fs.existsSync(uploadDirectory)) {
+    fs.mkdirSync(uploadDirectory, { recursive: true });
+}
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
-| Define static views                                                          |
+| Storage engine                                                               |
 \* —————————————————————————————————————————————————————————————————————————— */
+const storage = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, uploadDirectory);
+    },
+    filename: (req, file, callback) => {
+        const extension = path.extname(file.originalname);
+        const uniqueName = `${uuidv4()}${extension}`;
+        callback(null, `${uniqueName}`);
+    }
+});
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
-| Export router                                                                |
+| Initialize and export module                                                 |
 \* —————————————————————————————————————————————————————————————————————————— */
-export default router;
+const upload = multer({ storage });
+export default upload;

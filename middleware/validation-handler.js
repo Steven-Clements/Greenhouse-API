@@ -1,31 +1,39 @@
 /** ——————>> Copyright © 2025 Clementine Technology Solutions LLC.  <<——————— *\
-|* static-routes.js | {√}/routes                                              *|
+|* validation-handler.js | {√}/middleware                                     *|
 |* —————————————————————————————————————————————————————————————————————————— *|
-|* Primary router for API requests. Dispatches requests for both static and   *|
-|* API routes based on the specified URI.                                     *|
+|* Validates requests based on the rules established in `middleware/rules`    *|
+|* and the URI specified in the message.                                      *|
 |* —————————————————————————————————————————————————————————————————————————— *|
 |* @version 1.0.0   |  @since: 1.0.0                                          *|
 |* @author Steven "Chris" Clements <clements.steven07@outlook.com>            *|
 \* ————————————————————————>> All Rights Reserved. <<———————————————————————— */
 
 /* —————————————————————————————————————————————————————————————————————————— *\
-| Runtime dependencies                                                         |
+| Import dependencies                                                          |
 \* —————————————————————————————————————————————————————————————————————————— */
-import express from 'express';
+import { validationResult } from "express-validator";
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
-| Initialize router                                                            |
+| Application modules                                                          |
 \* —————————————————————————————————————————————————————————————————————————— */
-const router = express.Router();
+import InvalidParameterError from '../errors/Invalid-Parameter-Error.js';
 
 
 /* —————————————————————————————————————————————————————————————————————————— *\
-| Define static views                                                          |
+| Validate requests against rules                                              |
 \* —————————————————————————————————————————————————————————————————————————— */
+export default function validateRequest(req, res, next) {
+    const errors = validationResult(req);
 
+    if (!errors.isEmpty()) {
+        throw new InvalidParameterError(
+            `One or more parameters are invalid. Check errors below for details.`,
+            400,
+            true,
+            errors
+        );
+    }
 
-/* —————————————————————————————————————————————————————————————————————————— *\
-| Export router                                                                |
-\* —————————————————————————————————————————————————————————————————————————— */
-export default router;
+    next();
+}

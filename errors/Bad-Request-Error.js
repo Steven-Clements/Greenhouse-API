@@ -4,7 +4,7 @@
 |* Custom error thrown when invalid requests are received by the client.      *|
 |* —————————————————————————————————————————————————————————————————————————— *|
 |* @version 1.0.0   |  @since: 1.0.0                                          *|
-|* @author: Steven "Chris" Clements <clements.steven07@outlook.com>           *|
+|* @author Steven "Chris" Clements <clements.steven07@outlook.com>            *|
 \* ————————————————————————>> All Rights Reserved. <<———————————————————————— */
 
 /* —————————————————————————————————————————————————————————————————————————— *\
